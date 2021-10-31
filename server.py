@@ -20,7 +20,7 @@ class HandleMetricsServer:
 		file.close()
 
 	def put(self, data):
-		result = re.match(r"([^ ]+) ([0-9]+(?:\.[0-9+])) ([0-9]+)", data)
+		result = re.match(r"([^ ]+) ([0-9]+(?:\.[0-9]+)?) ([0-9]+)", data)
 		if result is None:
 			return self.error_message
 
@@ -101,19 +101,4 @@ def run_server(host, port):
 
 if __name__ == "__main__":
 	run_server('localhost', 10001)
-
-
-
-
-"""
-async def handle(time):
-	await asyncio.sleep(1)
-	print(str(time))
-
-async def main():
-	task1 = asyncio.create_task(handle(1))
-	task2 = asyncio.create_task(handle(2))
-	await asyncio.gather(task1, task2)
-
-asyncio.run(main())
-"""
+	
