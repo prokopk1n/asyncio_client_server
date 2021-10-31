@@ -20,7 +20,7 @@ class HandleMetricsServer:
 		file.close()
 
 	def put(self, data):
-		result = re.match(r"([^ ]+) ([0-9]+(?:\.[0-9]+)?) ([0-9]+)", data)
+		result = re.fullmatch(r"([^ ]+) ([0-9]+(?:\.[0-9]+)?) ([0-9]+)", data)
 		if result is None:
 			return self.error_message
 
@@ -46,7 +46,7 @@ class HandleMetricsServer:
 		return self.ok_message
 
 	def get(self, data):
-		result = re.match(r"[^ ]+", data)
+		result = re.fullmatch(r"[^ ]+", data)
 		if result is None:
 			return self.error_message
 
@@ -61,8 +61,9 @@ class HandleMetricsServer:
 
 		if data != "*":
 			value = content.get(data, None)
-			for timestamp, val in value.items():
-				result_message += f"{data} {val} {timestamp}\n"
+			if value is not None:
+				for timestamp, val in value.items():
+					result_message += f"{data} {val} {timestamp}\n"
 		else:
 			for name, value in content.items():
 				for timestamp, val in value.items():
@@ -72,7 +73,7 @@ class HandleMetricsServer:
 		return result_message + "\n"
 
 	def process_data(self, request):
-		result = self.regex_for_requests.match(request)
+		result = self.regex_for_requests.fullmatch(request)
 		if result is None:
 			return self.error_message
 		return self.commands[result.group(1)](result.group(2))
@@ -101,4 +102,3 @@ def run_server(host, port):
 
 if __name__ == "__main__":
 	run_server('localhost', 10001)
-	
